@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Voting App</title>
+</head>
+
+<body>
+    <h1>Hangi oy?</h1>
+    <button onclick="vote('Cats')">Cats</button>
+    <button onclick="vote('Dogs')">Dogs</button>
+
+    <p id="response"></p>
+
+    <script>
+        function vote(animal) {
+            fetch('http://192.168.64.5:5000/vote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ vote: animal })
+            })
+                .then(res => res.text())
+                .then(msg => {
+                    document.getElementById('response').innerText = msg;
+                })
+                .catch(err => console.error(err));
+        }
+    </script>
+</body>
+
+</html>

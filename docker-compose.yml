@@ -40,7 +40,7 @@ services:
   result:
     build: ./result
     ports:
-      - "5001:80"
+      - "5001:5001"
     depends_on:
       - backend
       - db

@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const redisHost = process.env.REDIS_HOST || 'localhost';
+const redisHost = process.env.REDIS_HOST || 'redis';  // düzeltildi!
 const redisPort = process.env.REDIS_PORT || 6379;
 
 const client = redis.createClient({

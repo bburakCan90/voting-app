@@ -1,19 +1,20 @@
 const express = require('express');
 const redis = require('redis');
-const cors = require('cors'); // CORS modülünü ekledik
+const cors = require('cors');
 
 const app = express();
-
-app.use(cors());              // Tüm kaynaklara CORS izni ver
+app.use(cors());
 app.use(express.json());
 
+const redisHost = process.env.REDIS_HOST || 'localhost';
+const redisPort = process.env.REDIS_PORT || 6379;
+
 const client = redis.createClient({
-    url: 'redis://127.0.0.1:6379'
+    url: `redis://${redisHost}:${redisPort}`
 });
 
 client.on('error', (err) => console.error('Redis Hatası:', err));
 
-// Ana async blok
 (async () => {
     await client.connect();
 
@@ -22,7 +23,6 @@ client.on('error', (err) => console.error('Redis Hatası:', err));
         if (vote !== 'Cats' && vote !== 'Dogs') {
             return res.status(400).send('Geçersiz oy');
         }
-
         try {
             const newCount = await client.incr(vote);
             res.send(`Oy alındı: ${vote} (Toplam: ${newCount})`);
@@ -31,7 +31,8 @@ client.on('error', (err) => console.error('Redis Hatası:', err));
         }
     });
 
-    app.listen(5000, '0.0.0.0', () => {
-        console.log('Backend çalışıyor: http://localhost:5000');
+    const PORT = process.env.PORT || 80;
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Backend çalışıyor: http://localhost:${PORT}`);
     });
 })();

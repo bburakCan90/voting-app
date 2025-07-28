@@ -3,13 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Voting App</title>
+    <title>Oy Ver App</title>
+    <link rel="stylesheet" href="style.css"> <!-- CSS'i ekledim -->
 </head>
 
 <body>
-    <h1>Hangi oy?</h1>
-    <button onclick="vote('Cats')">Cats</button>
-    <button onclick="vote('Dogs')">Dogs</button>
+    <h1>Oy Ver</h1>
+    <div class="vote-buttons">
+        <button onclick="vote('Kedi')">Kedi</button>
+        <button onclick="vote('Köpek')">Köpek</button>
+    </div>
 
     <p id="response"></p>
 

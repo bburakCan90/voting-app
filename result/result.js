@@ -1,8 +1,11 @@
 const express = require('express');
 const redis = require('redis');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 
-// YENİ ADRES:
+app.use(express.static(__dirname)); // <<--- Bunu ekledik! (statik dosya servisi)
+
 const client = redis.createClient({
     url: 'redis://redis:6379'
 });
@@ -13,14 +16,19 @@ client.on('error', (err) => console.error('Redis Hatası:', err));
     await client.connect();
 
     app.get('/', async (req, res) => {
-        const cats = await client.get('Cats') || 0;
-        const dogs = await client.get('Dogs') || 0;
+        const cats = await client.get('Kedi') || 0;
+        const dogs = await client.get('Köpek') || 0;
 
-        res.send(`
-      <h1>Oy Sonuçları</h1>
-      <p>Cats: ${cats}</p>
-      <p>Dogs: ${dogs}</p>
-    `);
+        // result.html dosyasını oku
+        fs.readFile(path.join(__dirname, 'result.html'), 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Dosya okunamadı!');
+                return;
+            }
+            // {{cats}} ve {{dogs}} yerlerini değiştir
+            const html = data.replace('{{cats}}', cats).replace('{{dogs}}', dogs);
+            res.send(html);
+        });
     });
 
     app.listen(5001, '0.0.0.0', () => {

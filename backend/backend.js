@@ -20,7 +20,7 @@ client.on('error', (err) => console.error('Redis Hatası:', err));
 
     app.post('/vote', async (req, res) => {
         const vote = req.body.vote;
-        if (vote !== 'Cats' && vote !== 'Dogs') {
+        if (vote !== 'Kedi' && vote !== 'Köpek') {
             return res.status(400).send('Geçersiz oy');
         }
         try {

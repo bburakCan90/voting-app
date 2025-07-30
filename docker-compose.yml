@@ -3,8 +3,9 @@ version: '3.8'
 services:
   redis:
     image: redis:alpine
-    # ports:
-    #  - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
 
   db:
     image: postgres:14-alpine
@@ -29,6 +30,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=votes
+    command: [ "node", "backend.js" ]
 
   frontend:
     build: ./frontend
@@ -36,11 +38,12 @@ services:
       - "3000:80"
     depends_on:
       - backend
+    command: [ "node", "frontend.js" ]
 
   result:
     build: ./result
     ports:
-      - "5001:5001"
+      - "5001:80"
     depends_on:
       - backend
       - db
@@ -52,6 +55,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=votes
+    command: [ "node", "result.js" ]
 
   worker:
     build: ./worker
@@ -65,3 +69,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=votes
+    command: [ "node", "worker.js" ]
+
+volumes:
+  redis-data:

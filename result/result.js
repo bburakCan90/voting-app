@@ -31,7 +31,7 @@ client.on('error', (err) => console.error('Redis Hatası:', err));
         });
     });
 
-    app.listen(5001, '0.0.0.0', () => {
+    app.listen(80, '0.0.0.0', () => {
         console.log('Result servisi çalışıyor: http://localhost:5001');
     });
 })();

@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const redisHost = process.env.REDIS_HOST || 'redis';  // düzeltildi!
+const redisHost = process.env.REDIS_HOST || 'redis';
 const redisPort = process.env.REDIS_PORT || 6379;
 
 const client = redis.createClient({
@@ -25,6 +25,7 @@ client.on('error', (err) => console.error('Redis Hatası:', err));
         }
         try {
             const newCount = await client.incr(vote);
+            await client.publish('votes', vote);
             res.send(`Oy alındı: ${vote} (Toplam: ${newCount})`);
         } catch (err) {
             res.status(500).send('Redis hatası');
